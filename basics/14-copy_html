@@ -1,20 +1,2 @@
 #!/bin/bash
-
-# Define the parent directory
-PARENT="../"
-
-# Loop through each .html file in the current directory
-for file in *.html
-do
-    # Check if the file exists in the parent directory
-    if [ ! -e "$PARENT$file" ]
-    then
-        cp "$file" "$PARENT"
-    else
-        if [ "$file" -nt "$PARENT$file" ]
-        then
-            cp "$file" "$PARENT"
-        fi
-    fi
-done
-
+for file in *.html; do if [ ! -e "../$file" ]; then cp "$file" ../; else if [ "$file" -nt "../$file" ]; then cp "$file" ../; fi; fi; done
