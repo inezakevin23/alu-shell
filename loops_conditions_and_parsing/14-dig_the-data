@@ -1,3 +1,36 @@
 #!/usr/bin/env bash
-# a Bash script that groups visitors by IP and HTTP status code
-awk '{print $1, $9}' access.log | awk '{count[$0]++} END {for (key in count) print count[key], key}' | sort -nr
+
+# This script processes Apache-style log data from standard input.
+# It identifies unique combinations of IP addresses and HTTP status codes,
+# counts their occurrences, and then displays them in descending order
+# of frequency, formatted as: OCCURRENCE_NUMBER IP HTTP_CODE.
+
+# It is designed to work with log formats where the IP address is the first field ($1)
+# and the HTTP status code is the ninth field ($9).
+
+# The core logic is implemented using a combination of 'awk' for data extraction
+# and counting, and 'sort' for ordering the final results.
+
+# 1. 'awk' command:
+#    '{count[$1" "$9]++}': For each line, it creates an associative array 'count'.
+#                         The key for this array is a concatenation of the IP address ($1)
+#                         and the HTTP status code ($9), separated by a space.
+#                         The '++' increments the value associated with that key, effectively
+#                         counting the occurrences of each unique IP-Status_Code combination.
+#    'END {for (key in count) print count[key], key}': After processing all lines (END block),
+#                                                  it iterates through each 'key' in the 'count' array.
+#                                                  For each key, it prints the stored count (count[key])
+#                                                  followed by the key itself (which is "IP HTTP_CODE").
+#                                                  This produces output like: "COUNT IP_ADDRESS STATUS_CODE".
+
+# 2. '|' (Pipe):
+#    The pipe redirects the standard output of the 'awk' command to the standard input
+#    of the 'sort' command.
+
+# 3. 'sort -rn' command:
+#    'sort': Sorts the input lines.
+#    '-r': Specifies reverse order, meaning from highest to lowest.
+#    '-n': Specifies numerical sort, which is necessary for correctly sorting the occurrence numbers.
+#          Without '-n', 'sort' would treat the numbers as strings (e.g., "100" comes before "20").
+
+awk '{count[$1" "$9]++} END {for (key in count) print count[key], key}' | sort -rn
