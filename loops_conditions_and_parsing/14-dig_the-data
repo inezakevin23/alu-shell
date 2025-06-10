@@ -1,5 +1,4 @@
 #!/usr/bin/env bash
-
 # This script processes Apache-style log data from standard input.
 # It identifies unique combinations of IP addresses and HTTP status codes,
 # counts their occurrences, and then displays them in descending order
